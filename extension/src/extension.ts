@@ -10,6 +10,10 @@ import {
 import { registerCommands } from "./commands";
 import { registerSidebar } from "./sidebar";
 import { registerPreview } from "./preview";
+import { registerBlockIndicators } from "./block-indicators";
+import { registerControlFlowDecorations } from "./control-flow-decorations";
+import { registerSecurityLens } from "./security-lens";
+import { registerBlockSeparators } from "./block-separators";
 
 let client: LanguageClient;
 
@@ -66,6 +70,10 @@ export function activate(context: ExtensionContext) {
   registerCommands(context);
   registerSidebar(context);
   registerPreview(context);
+  registerBlockIndicators(context);
+  registerControlFlowDecorations(context);
+  registerSecurityLens(context);
+  registerBlockSeparators(context);
 }
 
 export function deactivate(): Thenable<void> | undefined {

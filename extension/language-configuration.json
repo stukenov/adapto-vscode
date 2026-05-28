@@ -15,7 +15,11 @@
     { "open": "\"", "close": "\"", "notIn": ["string"] },
     { "open": "'", "close": "'", "notIn": ["string"] },
     { "open": "<!--", "close": "-->" },
-    { "open": "<", "close": ">", "notIn": ["string"] }
+    { "open": "<", "close": ">", "notIn": ["string"] },
+    { "open": "{#if ", "close": "{/if}" },
+    { "open": "{#each ", "close": "{/each}" },
+    { "open": "{#match ", "close": "{/match}" },
+    { "open": "{#can ", "close": "{/can}" }
   ],
   "surroundingPairs": [
     { "open": "{", "close": "}" },
@@ -25,14 +29,38 @@
     { "open": "'", "close": "'" },
     { "open": "<", "close": ">" }
   ],
+  "colorizedBracketPairs": [
+    ["{#if", "{/if}"],
+    ["{#each", "{/each}"],
+    ["{#match", "{/match}"],
+    ["{#can", "{/can}"],
+    ["{", "}"],
+    ["(", ")"],
+    ["[", "]"]
+  ],
   "folding": {
     "markers": {
-      "start": "^\\s*<(route|script|template|style|resource|layout)",
-      "end": "^\\s*</(route|script|template|style|resource|layout)>"
+      "start": "^\\s*(<(route|script|template|style|resource|layout)|\\{#(if|each|match|can)\\b)",
+      "end": "^\\s*(</(route|script|template|style|resource|layout)>|\\{/(if|each|match|can)\\})"
     }
   },
   "indentationRules": {
-    "increaseIndentPattern": "<(?!area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)([a-zA-Z][a-zA-Z0-9]*)[^/>]*>(?!.*</\\1>)|\\{[^}]*$",
-    "decreaseIndentPattern": "^\\s*(<\\/[a-zA-Z][a-zA-Z0-9]*>|\\}|\\{\\/(if|each|match|can)\\})"
-  }
+    "increaseIndentPattern": "<(?!area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)([a-zA-Z][a-zA-Z0-9]*)[^/>]*>(?!.*</\\1>)|\\{[^}]*$|\\{#(if|each|match|can)\\b[^}]*\\}",
+    "decreaseIndentPattern": "^\\s*(<\\/[a-zA-Z][a-zA-Z0-9]*>|\\}|\\{\\/(if|each|match|can)\\}|\\{:(else|when)\\b)"
+  },
+  "wordPattern": "[a-zA-Z_][a-zA-Z0-9_.-]*",
+  "onEnterRules": [
+    {
+      "beforeText": "^\\s*<(route|script|template|style|resource|layout)[^/]*>\\s*$",
+      "action": { "indent": "indent" }
+    },
+    {
+      "beforeText": "\\{#(if|each|match|can)\\b[^}]*\\}\\s*$",
+      "action": { "indent": "indent" }
+    },
+    {
+      "beforeText": "\\{:(else|when)\\b[^}]*\\}\\s*$",
+      "action": { "indent": "indent" }
+    }
+  ]
 }
