@@ -4,3 +4,5 @@ node_modules/
 extension/out/
 extension/bin/
 .superpowers/
+.cargo/config.toml
+test-sample.adapto
