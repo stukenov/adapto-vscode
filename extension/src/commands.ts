@@ -63,7 +63,8 @@ function startDevServer() {
     iconPath: new vscode.ThemeIcon("server"),
   });
   devServerTerminal.show();
-  devServerTerminal.sendText("adapto dev");
+  const port = vscode.workspace.getConfiguration("adapto").get<number>("devServer.port", 3000);
+  devServerTerminal.sendText(`adapto dev --port ${port}`);
   updateStatusBar(true);
 
   vscode.window.onDidCloseTerminal((t) => {

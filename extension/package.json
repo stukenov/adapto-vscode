@@ -1,23 +1,100 @@
 {
   "name": "adapto",
   "displayName": "Adapto",
-  "description": "Language support for Adapto (.adapto) files",
+  "description": "Full IDE support for the Adapto web framework — syntax highlighting, LSP diagnostics, completions, preview, and CLI integration for .adapto files",
   "version": "0.1.0",
   "publisher": "adapto",
+  "author": {
+    "name": "Saken Tukenov",
+    "email": "gorgtown@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/stukenov/adapto-vscode"
   },
+  "homepage": "https://github.com/stukenov/adapto-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/stukenov/adapto-vscode/issues"
+  },
   "license": "MIT",
+  "icon": "icons/adapto-icon.png",
+  "galleryBanner": {
+    "color": "#1E2340",
+    "theme": "dark"
+  },
+  "keywords": [
+    "adapto",
+    "web framework",
+    "rust",
+    "template",
+    "ssr",
+    "full-stack"
+  ],
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Programming Languages", "Themes"],
+  "categories": [
+    "Programming Languages",
+    "Themes",
+    "Snippets",
+    "Formatters",
+    "Linters"
+  ],
   "activationEvents": [
     "onLanguage:adapto"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Adapto",
+      "properties": {
+        "adapto.lsp.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the Adapto Language Server for diagnostics, completions, hover, and formatting."
+        },
+        "adapto.lsp.path": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to the adapto-lsp binary. Leave empty for auto-detection."
+        },
+        "adapto.preview.autoOpen": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically open the preview panel when an .adapto file is opened."
+        },
+        "adapto.format.onSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically format .adapto files on save."
+        },
+        "adapto.devServer.port": {
+          "type": "number",
+          "default": 3000,
+          "description": "Default port for the Adapto dev server."
+        },
+        "adapto.blockIndicators.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show block indicator icons in the status bar."
+        },
+        "adapto.controlFlowHighlight.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Highlight matched control flow pairs ({#if}/{/if}, {#each}/{/each}, etc.)."
+        },
+        "adapto.securityLens.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline annotations for #[permission] and #[audit] decorators."
+        },
+        "adapto.blockSeparators.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show visual separators between top-level blocks."
+        }
+      }
+    },
     "languages": [
       {
         "id": "adapto",

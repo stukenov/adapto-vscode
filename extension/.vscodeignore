@@ -4,4 +4,6 @@ tsconfig.json
 esbuild.mjs
 node_modules/**
 **/*.ts
+!**/*.d.ts
 **/*.map
+**/*.vsix
