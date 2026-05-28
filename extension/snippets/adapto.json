@@ -1,0 +1,142 @@
+{
+  "Adapto Page": {
+    "prefix": "apage",
+    "body": [
+      "<route>",
+      "  path: \"$1\"",
+      "  method: get",
+      "  auth: ${2|public,required,verified|}",
+      "</route>",
+      "",
+      "<script lang=\"rust\">",
+      "  $3",
+      "</script>",
+      "",
+      "<template>",
+      "  $0",
+      "</template>",
+      "",
+      "<style scoped>",
+      "</style>"
+    ],
+    "description": "Full Adapto page scaffold"
+  },
+  "Route Block": {
+    "prefix": "aroute",
+    "body": [
+      "<route>",
+      "  path: \"$1\"",
+      "  method: ${2|get,post,put,delete|}",
+      "  layout: \"${3:main}\"",
+      "  auth: ${4|public,required,verified|}",
+      "</route>"
+    ],
+    "description": "Route metadata block"
+  },
+  "Script Block": {
+    "prefix": "ascript",
+    "body": [
+      "<script lang=\"rust\">",
+      "  state ${1:name}: ${2:String} = ${3:\"default\"}",
+      "",
+      "  load async fn load(ctx: Ctx) {",
+      "    $0",
+      "  }",
+      "</script>"
+    ],
+    "description": "Script block with state and loader"
+  },
+  "Resource Block": {
+    "prefix": "aresource",
+    "body": [
+      "<resource table=\"${1:items}\">",
+      "  tenant: ${2|none,required,optional|}",
+      "  primary_key: id",
+      "",
+      "  field ${3:name}: ${4:String} @required",
+      "  $0",
+      "",
+      "  permission read: \"${1}.read\"",
+      "  permission write: \"${1}.write\"",
+      "</resource>"
+    ],
+    "description": "Resource data model"
+  },
+  "Layout Block": {
+    "prefix": "alayout",
+    "body": [
+      "<layout name=\"${1:main}\">",
+      "  auth: ${2|public,required|}",
+      "</layout>"
+    ],
+    "description": "Layout wrapper"
+  },
+  "If Block": {
+    "prefix": "aif",
+    "body": [
+      "{#if ${1:condition}}",
+      "  $0",
+      "{/if}"
+    ],
+    "description": "Conditional template block"
+  },
+  "If-Else Block": {
+    "prefix": "aifelse",
+    "body": [
+      "{#if ${1:condition}}",
+      "  $2",
+      "{:else}",
+      "  $0",
+      "{/if}"
+    ],
+    "description": "Conditional with else branch"
+  },
+  "Each Block": {
+    "prefix": "aeach",
+    "body": [
+      "{#each ${1:items} as ${2:item}}",
+      "  $0",
+      "{/each}"
+    ],
+    "description": "Loop over collection"
+  },
+  "Match Block": {
+    "prefix": "amatch",
+    "body": [
+      "{#match ${1:expr}}",
+      "  {:when ${2:pattern}}",
+      "    $0",
+      "{/match}"
+    ],
+    "description": "Pattern matching"
+  },
+  "Can Block": {
+    "prefix": "acan",
+    "body": [
+      "{#can \"${1:permission}\"}",
+      "  $0",
+      "{/can}"
+    ],
+    "description": "Permission guard"
+  },
+  "Action Function": {
+    "prefix": "aaction",
+    "body": [
+      "#[permission(\"${1:resource.action}\")]",
+      "action async fn ${2:handle}(${3:params}: ${4:Type}) {",
+      "  $0",
+      "}"
+    ],
+    "description": "Action handler with permission"
+  },
+  "Form Struct": {
+    "prefix": "aform",
+    "body": [
+      "form struct ${1:MyForm} {",
+      "  ${2:field}: ${3:String},",
+      "  $0",
+      "}"
+    ],
+    "description": "Form validation struct"
+  }
+}

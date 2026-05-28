@@ -1,0 +1,316 @@
+{
+  "name": "Adapto",
+  "scopeName": "source.adapto",
+  "fileTypes": ["adapto"],
+  "patterns": [
+    { "include": "#route-block" },
+    { "include": "#script-block" },
+    { "include": "#template-block" },
+    { "include": "#style-block" },
+    { "include": "#resource-block" },
+    { "include": "#layout-block" },
+    { "include": "#comment" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.block.html.adapto",
+      "begin": "<!--",
+      "end": "-->"
+    },
+    "route-block": {
+      "name": "meta.block.route.adapto",
+      "begin": "(<)(route)(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "end": "(</)(route)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "patterns": [
+        { "include": "#route-content" }
+      ]
+    },
+    "route-content": {
+      "patterns": [
+        {
+          "match": "^\\s*(path|method|layout|page_title|auth|role|permission|tenant|cache|error|not_found)\\s*(:)",
+          "captures": {
+            "1": { "name": "variable.other.property.adapto" },
+            "2": { "name": "punctuation.separator.key-value.adapto" }
+          }
+        },
+        {
+          "match": "\\b(public|required|verified|none|optional|no_store|private|static|get|post|put|delete|patch)\\b",
+          "name": "constant.language.adapto"
+        },
+        {
+          "match": "\"[^\"]*\"",
+          "name": "string.quoted.double.adapto"
+        }
+      ]
+    },
+    "script-block": {
+      "name": "meta.block.script.adapto",
+      "begin": "(<)(script)(\\s+lang\\s*=\\s*\"rust\")?(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "entity.other.attribute-name.adapto" },
+        "4": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "end": "(</)(script)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "patterns": [
+        { "include": "#script-keywords" },
+        { "include": "#decorators" },
+        { "include": "source.rust" }
+      ]
+    },
+    "script-keywords": {
+      "patterns": [
+        {
+          "match": "\\b(prop|state|memo|load|action|server|form|ai_action)\\b",
+          "name": "keyword.other.adapto"
+        },
+        {
+          "match": "\\b(async|fn|use|struct|let|mut)\\b",
+          "name": "keyword.other.rust"
+        }
+      ]
+    },
+    "decorators": {
+      "patterns": [
+        {
+          "match": "#\\[(permission|audit)\\(\"[^\"]*\"\\)\\]",
+          "name": "meta.attribute.adapto",
+          "captures": {
+            "1": { "name": "entity.name.function.decorator.adapto" }
+          }
+        }
+      ]
+    },
+    "template-block": {
+      "name": "meta.block.template.adapto",
+      "begin": "(<)(template)(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "end": "(</)(template)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "patterns": [
+        { "include": "#template-content" }
+      ]
+    },
+    "template-content": {
+      "patterns": [
+        { "include": "#control-flow" },
+        { "include": "#expression" },
+        { "include": "#unsafe-html" },
+        { "include": "#component-tag" },
+        { "include": "#html-tag" },
+        { "include": "#tag-attributes" },
+        { "include": "#comment" }
+      ]
+    },
+    "control-flow": {
+      "patterns": [
+        {
+          "match": "\\{#(if|each|match|can)\\b",
+          "name": "keyword.control.begin.adapto"
+        },
+        {
+          "match": "\\{:(else\\s+if|else|when)\\b",
+          "name": "keyword.control.branch.adapto"
+        },
+        {
+          "match": "\\{/(if|each|match|can)\\}",
+          "name": "keyword.control.end.adapto"
+        }
+      ]
+    },
+    "expression": {
+      "name": "meta.expression.adapto",
+      "begin": "\\{(?!#|/|:|@)",
+      "end": "\\}",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.expression.begin.adapto" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.expression.end.adapto" }
+      },
+      "patterns": [
+        {
+          "match": "[a-zA-Z_][a-zA-Z0-9_.]*",
+          "name": "variable.other.adapto"
+        }
+      ]
+    },
+    "unsafe-html": {
+      "match": "\\{@html\\s+[^}]+\\}",
+      "name": "meta.unsafe-html.adapto",
+      "captures": {
+        "0": { "name": "keyword.operator.unsafe.adapto" }
+      }
+    },
+    "component-tag": {
+      "patterns": [
+        {
+          "match": "(</?)(\\b[A-Z][a-zA-Z0-9]*\\b)",
+          "captures": {
+            "1": { "name": "punctuation.definition.tag.begin.adapto" },
+            "2": { "name": "entity.name.type.component.adapto" }
+          }
+        }
+      ]
+    },
+    "html-tag": {
+      "patterns": [
+        {
+          "match": "(</?)(\\b[a-z][a-z0-9-]*\\b)",
+          "captures": {
+            "1": { "name": "punctuation.definition.tag.begin.adapto" },
+            "2": { "name": "entity.name.tag.html.adapto" }
+          }
+        }
+      ]
+    },
+    "tag-attributes": {
+      "patterns": [
+        {
+          "match": "\\b(on):(\\w+)(?:\\.(prevent|stop|debounce|throttle)(?:\\.(\\d+))?)*",
+          "captures": {
+            "1": { "name": "keyword.operator.event.adapto" },
+            "2": { "name": "entity.name.function.event.adapto" },
+            "3": { "name": "support.function.modifier.adapto" },
+            "4": { "name": "constant.numeric.adapto" }
+          }
+        },
+        {
+          "match": "\\b(bind):(\\w+)",
+          "captures": {
+            "1": { "name": "keyword.operator.binding.adapto" },
+            "2": { "name": "variable.other.binding.adapto" }
+          }
+        },
+        {
+          "match": "\\b(island)\\b",
+          "name": "keyword.other.island.adapto"
+        },
+        {
+          "match": "\\b(class|id|style|href|src|alt|type|name|value|placeholder|disabled|readonly)\\b(?=\\s*=)",
+          "name": "entity.other.attribute-name.html.adapto"
+        },
+        {
+          "match": "\"[^\"]*\"",
+          "name": "string.quoted.double.adapto"
+        }
+      ]
+    },
+    "style-block": {
+      "name": "meta.block.style.adapto",
+      "begin": "(<)(style)(\\s+(?:scoped|global))?(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "keyword.other.scope.adapto" },
+        "4": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "end": "(</)(style)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "patterns": [
+        { "include": "source.css" }
+      ]
+    },
+    "resource-block": {
+      "name": "meta.block.resource.adapto",
+      "begin": "(<)(resource)(\\s+[^>]*)?(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "entity.other.attribute-name.adapto" },
+        "4": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "end": "(</)(resource)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "patterns": [
+        { "include": "#resource-content" }
+      ]
+    },
+    "resource-content": {
+      "patterns": [
+        {
+          "match": "\\b(field|permission|tenant|primary_key)\\b",
+          "name": "keyword.other.resource.adapto"
+        },
+        {
+          "match": "@(email|required|min|max|unique|optional|searchable|readonly)\\b",
+          "name": "support.function.constraint.adapto"
+        },
+        {
+          "match": "\\b(String|Integer|Float|Boolean|DateTime|Uuid|Json|Text)\\b",
+          "name": "support.type.adapto"
+        },
+        {
+          "match": "\"[^\"]*\"",
+          "name": "string.quoted.double.adapto"
+        }
+      ]
+    },
+    "layout-block": {
+      "name": "meta.block.layout.adapto",
+      "begin": "(<)(layout)(\\s+[^>]*)?(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "entity.other.attribute-name.adapto" },
+        "4": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "end": "(</)(layout)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.adapto" },
+        "2": { "name": "entity.name.tag.block.adapto" },
+        "3": { "name": "punctuation.definition.tag.end.adapto" }
+      },
+      "patterns": [
+        {
+          "match": "\\b(name|auth|tenant)\\s*(:)",
+          "captures": {
+            "1": { "name": "variable.other.property.adapto" },
+            "2": { "name": "punctuation.separator.key-value.adapto" }
+          }
+        },
+        {
+          "match": "\\b(public|required|verified|none|optional)\\b",
+          "name": "constant.language.adapto"
+        },
+        {
+          "match": "\"[^\"]*\"",
+          "name": "string.quoted.double.adapto"
+        }
+      ]
+    }
+  }
+}

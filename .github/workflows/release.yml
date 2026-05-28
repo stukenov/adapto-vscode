@@ -1,0 +1,91 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build-lsp:
+    name: Build LSP - ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            binary: adapto-lsp-darwin-x64
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            binary: adapto-lsp-darwin-arm64
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            binary: adapto-lsp-linux-x64
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            binary: adapto-lsp-win32-x64.exe
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build -p adapto-lsp --release --target ${{ matrix.target }}
+      - name: Rename binary
+        shell: bash
+        run: |
+          src="target/${{ matrix.target }}/release/adapto-lsp"
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            src="${src}.exe"
+          fi
+          cp "$src" "${{ matrix.binary }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.binary }}
+          path: ${{ matrix.binary }}
+
+  package:
+    name: Package Extension
+    needs: build-lsp
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: extension/bin
+
+      - name: Flatten binaries
+        run: |
+          cd extension/bin
+          for dir in */; do
+            mv "$dir"* .
+            rmdir "$dir"
+          done
+          chmod +x adapto-lsp-*
+          ls -la
+
+      - run: cd extension && npm ci
+      - run: npm install -g @vscode/vsce
+
+      - name: Package .vsix
+        run: cd extension && vsce package --no-dependencies
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: adapto.vsix
+          path: extension/*.vsix
+
+      - name: Publish to Marketplace
+        if: github.event_name == 'push'
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: cd extension && vsce publish --no-dependencies
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            extension/*.vsix
+            extension/bin/adapto-lsp-*

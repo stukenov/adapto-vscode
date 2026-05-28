@@ -1,0 +1,99 @@
+{
+  "name": "adapto",
+  "displayName": "Adapto",
+  "description": "Language support for Adapto (.adapto) files",
+  "version": "0.1.0",
+  "publisher": "adapto",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Programming Languages"],
+  "activationEvents": [
+    "onLanguage:adapto"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "adapto",
+        "aliases": ["Adapto", "adapto"],
+        "extensions": [".adapto"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "adapto",
+        "scopeName": "source.adapto",
+        "path": "./syntaxes/adapto.tmLanguage.json",
+        "embeddedLanguages": {
+          "source.rust": "rust",
+          "source.css": "css",
+          "text.html.basic": "html"
+        }
+      }
+    ],
+    "snippets": [
+      {
+        "language": "adapto",
+        "path": "./snippets/adapto.json"
+      }
+    ],
+    "commands": [
+      { "command": "adapto.newProject", "title": "Adapto: New Project" },
+      { "command": "adapto.startDevServer", "title": "Adapto: Start Dev Server" },
+      { "command": "adapto.stopDevServer", "title": "Adapto: Stop Dev Server" },
+      { "command": "adapto.build", "title": "Adapto: Build" },
+      { "command": "adapto.check", "title": "Adapto: Check" },
+      { "command": "adapto.generateResource", "title": "Adapto: Generate Resource" },
+      { "command": "adapto.showRoutes", "title": "Adapto: Show Routes" },
+      { "command": "adapto.doctor", "title": "Adapto: Doctor" },
+      {
+        "command": "adapto.openPreview",
+        "title": "Adapto: Open Preview",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "adapto.openPreview",
+          "when": "resourceLangId == adapto",
+          "group": "navigation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "adapto",
+          "title": "Adapto",
+          "icon": "icons/adapto-icon.png"
+        }
+      ]
+    },
+    "views": {
+      "adapto": [
+        {
+          "id": "adaptoExplorer",
+          "name": "Explorer"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "node esbuild.mjs --production",
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "lint": "eslint src --ext ts"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "esbuild": "^0.21.0",
+    "typescript": "^5.4.0"
+  }
+}
